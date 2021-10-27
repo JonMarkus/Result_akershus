@@ -54,17 +54,17 @@ scoring_data = [party_result(row.Party, row.Votes) for row in election_results.i
 mandates = {}
 while sum(mandates.values()) < NUM_DISTRICT_MANDATES:
     # Ensure data is sorted in descending order of scores
-    scoring_data.sort(key=lambda r: r['score'], reverse=True)
+    scoring_data.sort(key=lambda r: r.score, reverse=True)
 
     # First entry in sorted list wins the mandate
     winner = scoring_data[0]
 
     # Register seat won
-    mandates[winner['party']] = mandates.get(winner['party'], 0) + 1
+    mandates[winner.party] = mandates.get(winner.party, 0) + 1
 
     # Update winner entry with new score and divisor for next round
-    winner['score'] = winner['votes'] / winner['next_div']
-    winner['next_div'] += 2
+    winner.score = winner.votes / winner.next_div
+    winner.next_div += 2
 
 # Report mandates won
 for party, seats in mandates.items():
