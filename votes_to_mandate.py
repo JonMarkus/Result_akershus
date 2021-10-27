@@ -48,11 +48,7 @@ class party_result:
         self.score = self.votes / self.next_div
         self.next_div += 2
 
-scoring_data = [{'party': row.Party,
-                'votes': row.Votes,
-                'score': row.Votes / 1.4,
-                'next_div': 3}
-                for row in election_results.itertuples()]
+scoring_data = [party_result(row.Party, row.Votes) for row in election_results.itertuples()]
 
 # Distribute mandates, counting how many mandates are assigned to each party
 mandates = {}
