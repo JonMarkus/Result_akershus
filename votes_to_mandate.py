@@ -35,10 +35,23 @@ election_results = pd.read_csv('result_akershus_2021.csv')
 
 # Create a record for each party containing the party name, the number of votes received,
 # the initial score according to point 1, and the divisor for the next division (points 3.b and 4)
+
+class party_result:
+
+    def __init__(self, party, votes):
+        self.party = party
+        self.votes = votes
+        self.score = votes/1.4
+        self.next_div = 3
+
+    def update_score(self):
+        self.score = self.votes / self.next_div
+        self.next_div += 2
+
 scoring_data = [{'party': row.Party,
-                 'votes': row.Votes,
-                 'score': row.Votes / 1.4,
-                 'next_div': 3}
+                'votes': row.Votes,
+                'score': row.Votes / 1.4,
+                'next_div': 3}
                 for row in election_results.itertuples()]
 
 # Distribute mandates, counting how many mandates are assigned to each party
