@@ -23,6 +23,7 @@ the utjevningsmandat for Akershus.
 """
 
 import pandas as pd
+import random
 
 # Create a record for each party containing the party name, the number of votes received,
 # the initial score according to point 1, and the divisor for the next division (points 3.b and 4)
@@ -49,8 +50,22 @@ def mandates_count(election_results, NUM_DISTRICT_MANDATES):
         scoring_data.sort(key=lambda r: r.score, reverse=True)
 
         # First entry in sorted list wins the mandate
-        winner = scoring_data[0]
-
+        i = 1
+        winners = [scoring_data[0]]
+        while scoring_data[i-1].score == scoring_data[i].score and i < NUM_DISTRICT_MANDATES:
+            winners.append(scoring_data[i])
+            i += 1
+        winners.sort(key=lambda r: r.votes, reverse=True)
+        if len(winners) == 1:
+            winner = winners[0]
+        else:
+            tie_winners = [winners[0]]
+            for j in range(1, len(winners)):
+                if winners[j].votes == winners[j-1].votes:
+                    tie_winners.append(winners[j])
+                else:
+                    break
+            winner = tie_winners[random.randint(0, len(tie_winners)-1)]
         # Register seat won
         mandates[winner.party] = mandates.get(winner.party, 0) + 1
 
