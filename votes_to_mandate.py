@@ -28,6 +28,7 @@ import random
 # Create a record for each party containing the party name, the number of votes received,
 # the initial score according to point 1, and the divisor for the next division (points 3.b and 4)
 
+
 class party_result:
 
     def __init__(self, party, votes):
@@ -39,6 +40,7 @@ class party_result:
     def update_score(self):
         self.score = self.votes / self.next_div
         self.next_div += 2
+
 
 def mandates_count(election_results, NUM_DISTRICT_MANDATES):
     scoring_data = [party_result(row.Party, row.Votes) for row in election_results.itertuples()]
@@ -79,6 +81,7 @@ def mandates_count(election_results, NUM_DISTRICT_MANDATES):
         # Update winner entry with new score and divisor for next round
         winner.update_score()
     return mandates
+
 
 if __name__ == "__main__":
 
