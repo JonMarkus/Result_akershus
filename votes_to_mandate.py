@@ -24,15 +24,6 @@ the utjevningsmandat for Akershus.
 
 import pandas as pd
 
-# Seats allocated to Akershus district. One seat is reserved for an utjevningsmandat
-# (ensures better proprotional representation on the national level). Here, only the
-# remaining "distriktsmandater" are distributed.
-NUM_MANDATES = 19
-NUM_DISTRICT_MANDATES = NUM_MANDATES - 1
-
-# Read example data from CSV file into DataFrame
-election_results = pd.read_csv('result_akershus_2021.csv')
-
 # Create a record for each party containing the party name, the number of votes received,
 # the initial score according to point 1, and the divisor for the next division (points 3.b and 4)
 
@@ -48,23 +39,36 @@ class party_result:
         self.score = self.votes / self.next_div
         self.next_div += 2
 
-scoring_data = [party_result(row.Party, row.Votes) for row in election_results.itertuples()]
+def mandates_count(election_results, NUM_DISTRICT_MANDATES):
+    scoring_data = [party_result(row.Party, row.Votes) for row in election_results.itertuples()]
 
-# Distribute mandates, counting how many mandates are assigned to each party
-mandates = {}
-while sum(mandates.values()) < NUM_DISTRICT_MANDATES:
-    # Ensure data is sorted in descending order of scores
-    scoring_data.sort(key=lambda r: r.score, reverse=True)
+    # Distribute mandates, counting how many mandates are assigned to each party
+    mandates = {}
+    while sum(mandates.values()) < NUM_DISTRICT_MANDATES:
+        # Ensure data is sorted in descending order of scores
+        scoring_data.sort(key=lambda r: r.score, reverse=True)
 
-    # First entry in sorted list wins the mandate
-    winner = scoring_data[0]
+        # First entry in sorted list wins the mandate
+        winner = scoring_data[0]
 
-    # Register seat won
-    mandates[winner.party] = mandates.get(winner.party, 0) + 1
+        # Register seat won
+        mandates[winner.party] = mandates.get(winner.party, 0) + 1
 
-    # Update winner entry with new score and divisor for next round
-    winner.update_score()
+        # Update winner entry with new score and divisor for next round
+        winner.update_score()
+    return mandates
 
-# Report mandates won
-for party, seats in mandates.items():
-    print(f'{party:<4s}: {seats:2d} mandates')
+if __name__ == "__main__":
+
+    # Seats allocated to Akershus district. One seat is reserved for an utjevningsmandat
+    # (ensures better proprotional representation on the national level). Here, only the
+    # remaining "distriktsmandater" are distributed.
+    NUM_MANDATES = 19
+    NUM_DISTRICT_MANDATES = NUM_MANDATES - 1
+
+    # Read example data from CSV file into DataFrame
+    election_results = pd.read_csv('result_akershus_2021.csv')
+    # Report mandates won
+    mandates = mandates_count(election_results, NUM_DISTRICT_MANDATES)
+    for party, seats in mandates.items():
+        print(f'{party:<4s}: {seats:2d} mandates')
