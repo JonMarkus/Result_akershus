@@ -63,8 +63,7 @@ while sum(mandates.values()) < NUM_DISTRICT_MANDATES:
     mandates[winner.party] = mandates.get(winner.party, 0) + 1
 
     # Update winner entry with new score and divisor for next round
-    winner.score = winner.votes / winner.next_div
-    winner.next_div += 2
+    winner.update_score()
 
 # Report mandates won
 for party, seats in mandates.items():
