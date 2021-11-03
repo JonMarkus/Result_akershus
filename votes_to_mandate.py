@@ -49,23 +49,30 @@ def mandates_count(election_results, NUM_DISTRICT_MANDATES):
         # Ensure data is sorted in descending order of scores
         scoring_data.sort(key=lambda r: r.score, reverse=True)
 
-        # First entry in sorted list wins the mandate
+        # Making a new list with all parties with the same score
         i = 1
         winners = [scoring_data[0]]
         while scoring_data[i-1].score == scoring_data[i].score and i < NUM_DISTRICT_MANDATES:
             winners.append(scoring_data[i])
             i += 1
         winners.sort(key=lambda r: r.votes, reverse=True)
+
+        # Checking if there is only one winner
         if len(winners) == 1:
             winner = winners[0]
+
         else:
+            # Making a new list with all the parties with the same score and same amount of votes
             tie_winners = [winners[0]]
             for j in range(1, len(winners)):
                 if winners[j].votes == winners[j-1].votes:
                     tie_winners.append(winners[j])
                 else:
                     break
+
+            # Picking a random party out of the list
             winner = tie_winners[random.randint(0, len(tie_winners)-1)]
+
         # Register seat won
         mandates[winner.party] = mandates.get(winner.party, 0) + 1
 
