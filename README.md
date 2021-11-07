@@ -1,3 +1,3 @@
-# w43 and  44
+# Result Akershus
 
-Exercises for week 43 & 44
+Takes the number of votes from Akershus in 2021 and decides hiw many mandates the different parties will get.
