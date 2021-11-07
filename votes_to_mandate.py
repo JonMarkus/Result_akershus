@@ -57,6 +57,8 @@ def mandates_count(election_results, NUM_DISTRICT_MANDATES):
         while scoring_data[i-1].score == scoring_data[i].score and i < NUM_DISTRICT_MANDATES:
             winners.append(scoring_data[i])
             i += 1
+
+        # Sorting the list of parties with the same score by votes
         winners.sort(key=lambda r: r.votes, reverse=True)
 
         # Checking if there is only one winner
@@ -64,7 +66,8 @@ def mandates_count(election_results, NUM_DISTRICT_MANDATES):
             winner = winners[0]
 
         else:
-            # Making a new list with all the parties with the same score and same amount of votes
+            # Mark that the parties with the same highest score is already sorted by votes
+            # Making a new list with all the parties with the same highest score and votes
             tie_winners = [winners[0]]
             for j in range(1, len(winners)):
                 if winners[j].votes == winners[j-1].votes:
@@ -73,7 +76,9 @@ def mandates_count(election_results, NUM_DISTRICT_MANDATES):
                     break
 
             # Picking a random party out of the list
+            # mark: if there one party that has more votes than the other parties whit same score the random is always 0
             winner = tie_winners[random.randint(0, len(tie_winners)-1)]
+
 
         # Register seat won
         mandates[winner.party] = mandates.get(winner.party, 0) + 1
